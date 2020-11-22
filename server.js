@@ -2,7 +2,6 @@ const express = require('express')
 const app = express()
 const cors = require('cors')
 const session = require('express-session')
-const MongoDBStore = require('connect-mongodb-session')(session);
 require('dotenv').config()
 
 
@@ -22,6 +21,9 @@ app.use('/', cartRoute)
 const placeOrderRoute = require('./Routers/placeOrderRoute')
 app.use('/', placeOrderRoute)
 
+app.get('/', (req, res) => {
+   res.send('Welcome to node app')
+})
 
 // Database Connection
 const dbConnection = require('./DBConnection/DBConnection')
