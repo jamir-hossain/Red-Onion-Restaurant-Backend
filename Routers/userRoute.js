@@ -69,15 +69,15 @@ router.post('/user-signIn', async(req, res) => {
       const correctUser = await UserSchemaData.findOne({email:email})
       const {_id, name} = correctUser
       if (!correctUser) {
-         return res.send({message:'Email is not correct'})
+         return res.send({error:'Email is not correct'})
       }
       const correctPassword = await bcrypt.compare(password, correctUser.password)
       if (!correctPassword) {
-         return res.send({message:'Password is not correct'})
+         return res.send({error:'Password is not correct'})
       }
       const token = await jwt.sign({ _id:_id, name:name, email:correctUser.email }, process.env.SECRET_KEY, { expiresIn: "2h"});
       console.log(token)
-      res.send({message:'You are Successfully Sign In.', token:token})
+      res.send({success:'You are Successfully Sign In.', token:token})
    } catch (error) {
       res.send(error.message)
    }
