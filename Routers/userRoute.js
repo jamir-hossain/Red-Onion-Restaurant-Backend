@@ -63,6 +63,7 @@ router.get('/get-user', requireLogin, async(req, res) => {
 
 // User Login
 router.post('/user-signIn', async(req, res) => {
+   console.log(req.body.signIn)
    try {
       const {email, password} = req.body.signIn
       const correctUser = await UserSchemaData.findOne({email:email})
@@ -75,6 +76,7 @@ router.post('/user-signIn', async(req, res) => {
          return res.send({message:'Password is not correct'})
       }
       const token = await jwt.sign({ _id:_id, name:name, email:correctUser.email }, process.env.SECRET_KEY, { expiresIn: "2h"});
+      console.log(token)
       res.send({message:'You are Successfully Sign In.', token:token})
    } catch (error) {
       res.send(error.message)
