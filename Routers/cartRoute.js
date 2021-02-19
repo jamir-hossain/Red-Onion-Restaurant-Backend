@@ -46,7 +46,7 @@ router.get('/get-cart-food', async(req, res) => {
    }
 })
 
-// Get All Cart Food
+// Add and Remove Cart Food Quantity
 router.put('/add-and-remove-quantity', requireLogin, async(req, res) => {
    const Quantity = req.body.quantity
    try {

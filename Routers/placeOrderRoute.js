@@ -38,7 +38,7 @@ router.post('/place-order', requireLogin, async(req, res) => {
 // Get Order Details
 router.get('/get_order_details', requireLogin, async(req, res) => {
    try {
-      const orderDetails = await FoodOrderModelData.find()
+     const orderDetails = await FoodOrderModelData.find()
       res.send(orderDetails)
    } catch (error) {
       res.send(error)
