@@ -1,47 +1,40 @@
 const router = require('express').Router()
-
 const {requireLogin} = require('../CustomMiddleware/authMiddleWare')
-const FoodOrderModelData = require('../Models/foodOrderModel')
-const UserSchemaData = require('../Models/userModel')
+const OrderedFoodData = require('../Models/foodOrderModel')
+
 
 router.post('/place-order', requireLogin, async(req, res) => {
    try {
-      const {_id, name, email} = req.body.user
-      const shippingAddress = req.body.shipping
-      const foods = req.body.foods
-      const {totalItem, itemPrice, total, tax} = req.body.cost
-      const orderComplete = new FoodOrderModelData({
-         userID:_id, 
-         name,
-         email,
-         foods,
-         shippingAddress,
-         totalItem,
-         itemPrice,
-         total,
-         vat_and_text:tax
+      const {name, email, phone, city, address, zipCode, totalItems, totalCost} = req.body
+      const orderComplete = new OrderedFoodData({
+         name, 
+         email, 
+         phone, 
+         city, 
+         address, 
+         zipCode, 
+         totalItems, 
+         totalCost,
+         orderBy: {
+            user_id: req.user.user_id, 
+            name: req.user.name, 
+            email: req.user.email
+         }
       })
       await orderComplete.save()
-      if (orderComplete) {
-         await UserSchemaData.findByIdAndUpdate(req.user._id, {
-            cartFood:[]
-         },{
-            new:true
-         })
-      }
-      res.send({success:"Order Successfully Placed."})
+      res.send({orderComplete, success:"Order Successfully Placed."})
    } catch (error) {
-      res.send(error)
+      res.send({error: error.message})
    }
 })
 
 // Get Order Details
-router.get('/get_order_details', requireLogin, async(req, res) => {
+router.get('/get/order/details', requireLogin, async(req, res) => {
    try {
-     const orderDetails = await FoodOrderModelData.find()
+     const orderDetails = await OrderedFoodData.find()
       res.send(orderDetails)
    } catch (error) {
-      res.send(error)
+      res.send({error: error.message})
    }
 })
 
